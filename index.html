@@ -14,10 +14,14 @@
         }
 
         :root {
-            --ios-blue: #007AFF; --ios-bg: #FFFFFF; --ios-secondary-bg: #F2F2F7;
-            --ios-gray: #8E8E93; --ios-separator: rgba(60, 60, 67, 0.29);
-            --bar-bg: rgba(249, 249, 249, 0.94); --ios-red: #FF3B30;
-            --supporter-pink: #FF2D55;
+            --ios-blue: #007AFF;
+            --ios-bg: #FFFFFF;
+            --ios-secondary-bg: #F2F2F7;
+            --ios-gray: #8E8E93;
+            --ios-separator: rgba(60, 60, 67, 0.29);
+            --bar-bg: rgba(249, 249, 249, 0.94);
+            --ios-red: #FF3B30;
+            --mc-gold: #FFAA00;
         }
 
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; font-family: 'Minecraft', sans-serif; }
@@ -36,11 +40,11 @@
         .viewport.active { display: flex; }
 
         .msg-group { margin-bottom: 10px; display: flex; flex-direction: column; }
-        .sender-label { font-size: 10px; color: var(--ios-gray); margin-bottom: 2px; }
-        .admin-tag { color: var(--ios-blue); font-weight: bold; margin-right: 4px; }
-        .supporter-tag { color: var(--supporter-pink); font-weight: bold; margin-right: 4px; }
+        .sender-label { font-size: 10px; color: var(--ios-gray); margin-bottom: 2px; display: flex; gap: 4px; }
+        .admin-tag { color: var(--ios-blue); font-weight: bold; }
+        .supporter-tag { color: var(--mc-gold); font-weight: bold; }
         
-        .msg-group.sent .sender-label { align-self: flex-end; margin-right: 8px; }
+        .msg-group.sent .sender-label { align-self: flex-end; margin-right: 8px; justify-content: flex-end; }
         .msg-group.received .sender-label { margin-left: 8px; }
 
         .bubble { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.4; word-wrap: break-word; }
@@ -126,21 +130,22 @@
         const db = getDatabase(app);
         const chatRef = ref(db, 'messages');
         const annRef = ref(db, 'announcements');
-
         const clickAudio = document.getElementById('mc-click');
+
         window.playClick = () => { clickAudio.currentTime = 0; clickAudio.play().catch(()=>{}); };
 
         let myName = localStorage.getItem('mc_name') || "";
         let isStaff = localStorage.getItem('isStaff') === 'true';
-        let myRanks = JSON.parse(localStorage.getItem('my_ranks') || "[]");
+        let isSupporter = localStorage.getItem('isSupporter') === 'true';
         let lastSent = 0;
         let editMode = false;
         const cussWords = ["stupid", "fuck", "nigger", "ass", "bitch", "shit"];
 
-        // --- URL DETECTION FOR SUPPORTER TAG ---
-        if (window.location.href.includes("abc4691acg39e41s")) {
-            window.history.replaceState({}, document.title, "/");
+        // --- SECRET URL LOGIC ---
+        if (window.location.search.includes('abc4691acg39e41s')) {
+            window.history.replaceState({}, document.title, window.location.pathname);
             window.onload = () => {
+                playClick();
                 openModal(`<div class="alert-content"><h3>Claim The Supporter Tag</h3><p>You are able to claim the Supporter tag</p></div>
                 <div class="alert-btns"><button class="alert-btn" style="font-weight:bold" onclick="claimSupporter()">Claim</button></div>`);
             };
@@ -148,14 +153,12 @@
 
         window.claimSupporter = () => {
             playClick();
-            if (!myRanks.includes("Supporter")) {
-                myRanks.push("Supporter");
-                localStorage.setItem('my_ranks', JSON.stringify(myRanks));
-            }
+            isSupporter = true;
+            localStorage.setItem('isSupporter', 'true');
             closeModal();
         };
 
-        if(!myName && !window.location.href.includes("abc4691acg39e41s")) window.onload = () => showUserModal();
+        if(!myName) window.onload = () => showUserModal();
         if(isStaff) unlockStaff();
 
         function unlockStaff() {
@@ -199,7 +202,7 @@
             let text = input.value.trim();
             if(!text) return;
             cussWords.forEach(w => { text = text.replace(new RegExp(w, "gi"), "****"); });
-            push(chatRef, { text, sender: myName, admin: isStaff, ranks: myRanks });
+            push(chatRef, { text, sender: myName, admin: isStaff, supporter: isSupporter });
             input.value = ''; lastSent = now;
         };
 
@@ -210,11 +213,11 @@
             group.className = `msg-group ${isMe ? 'sent' : 'received'}`;
             group.id = `msg-${snap.key}`;
             
-            let rankHtml = "";
-            if(d.admin) rankHtml += `<span class="admin-tag">[ADMIN]</span>`;
-            if(d.ranks && d.ranks.includes("Supporter")) rankHtml += `<span class="supporter-tag">[SUPPORTER]</span>`;
+            let tags = "";
+            if(d.admin) tags += `<span class="admin-tag">[ADMIN]</span>`;
+            if(d.supporter) tags += `<span class="supporter-tag">[SUPPORTER]</span>`;
 
-            group.innerHTML = `<div class="sender-label">${rankHtml}${d.sender}</div><div class="bubble">${d.text}</div>`;
+            group.innerHTML = `<div class="sender-label">${tags}${d.sender}</div><div class="bubble">${d.text}</div>`;
             document.getElementById('chat-view').appendChild(group);
             document.getElementById('chat-view').scrollTop = document.getElementById('chat-view').scrollHeight;
         });
@@ -255,15 +258,8 @@
             document.getElementById('ann-container').prepend(card);
         });
 
-        window.toggleEdit = () => {
-            editMode = !editMode;
-            document.getElementById('master-edit').style.color = editMode ? 'var(--ios-red)' : 'var(--ios-blue)';
-            document.querySelectorAll('.del-badge').forEach(b => b.classList.toggle('hidden', !editMode));
-        };
-        window.reqDeleteAnn = (id) => {
-            openModal(`<div class="alert-content"><h3>Delete?</h3></div>
-            <div class="alert-btns"><button class="alert-btn" onclick="closeModal()">No</button><button class="alert-btn" style="color:var(--ios-red); font-weight:bold" onclick="doDeleteAnn('${id}')">Delete</button></div>`);
-        };
+        window.toggleEdit = () => { editMode = !editMode; document.getElementById('master-edit').style.color = editMode ? 'var(--ios-red)' : 'var(--ios-blue)'; document.querySelectorAll('.del-badge').forEach(b => b.classList.toggle('hidden', !editMode)); };
+        window.reqDeleteAnn = (id) => { openModal(`<div class="alert-content"><h3>Delete?</h3></div><div class="alert-btns"><button class="alert-btn" onclick="closeModal()">No</button><button class="alert-btn" style="color:var(--ios-red); font-weight:bold" onclick="doDeleteAnn('${id}')">Delete</button></div>`); };
         window.doDeleteAnn = (id) => { playClick(); remove(ref(db, `announcements/${id}`)); closeModal(); };
         onChildRemoved(annRef, (snap) => document.getElementById(`ann-${snap.key}`)?.remove());
 
@@ -275,8 +271,7 @@
             document.getElementById('tab-chat').classList.toggle('active', isChat);
             document.getElementById('tab-ann').classList.toggle('active', !isChat);
             document.getElementById('header-title').innerText = isChat ? 'General Chat' : 'News';
-            if(isStaff && isChat) document.getElementById('admin-clear-btn').classList.remove('hidden');
-            else document.getElementById('admin-clear-btn').classList.add('hidden');
+            if(isStaff && isChat) document.getElementById('admin-clear-btn').classList.remove('hidden'); else document.getElementById('admin-clear-btn').classList.add('hidden');
         };
 
         document.getElementById('chat-input').addEventListener('keypress', (e) => { if(e.key==='Enter') handleSend(); });
