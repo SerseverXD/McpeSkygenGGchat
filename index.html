@@ -7,64 +7,51 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
-        /* Font Integration */
         @font-face {
             font-family: 'Minecraft';
             src: url('https://cdn.jsdelivr.net/gh/aditkumar08/minecraft-font/Minecraft-Regular.woff2') format('woff2');
-            font-weight: normal;
-            font-style: normal;
+            font-weight: normal; font-style: normal;
         }
 
         :root {
-            --ios-blue: #007AFF;
-            --ios-bg: #FFFFFF;
-            --ios-secondary-bg: #F2F2F7;
-            --ios-gray: #8E8E93;
-            --ios-separator: rgba(60, 60, 67, 0.29);
-            --bar-bg: rgba(249, 249, 249, 0.94);
-            --ios-red: #FF3B30;
+            --ios-blue: #007AFF; --ios-bg: #FFFFFF; --ios-secondary-bg: #F2F2F7;
+            --ios-gray: #8E8E93; --ios-separator: rgba(60, 60, 67, 0.29);
+            --bar-bg: rgba(249, 249, 249, 0.94); --ios-red: #FF3B30;
+            --supporter-pink: #FF2D55;
         }
 
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; font-family: 'Minecraft', sans-serif; }
         body { margin: 0; background-color: var(--ios-bg); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* --- TOP BAR --- */
         header {
             height: 50px; background: var(--bar-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-bottom: 0.5px solid var(--ios-separator); position: fixed; top: 0; width: 100%; z-index: 1000;
             display: flex; align-items: center; justify-content: space-between; padding: 0 15px;
         }
         header h1 { margin: 0; font-size: 14px; font-weight: 400; color: #000; letter-spacing: 1px; }
-        
         .header-icon { color: var(--ios-blue); font-size: 18px; cursor: pointer; width: 30px; }
         .header-icon.red { color: var(--ios-red); }
 
-        /* --- VIEWPORT --- */
         .viewport { flex: 1; padding: 65px 12px 150px 12px; overflow-y: auto; display: none; flex-direction: column; }
         .viewport.active { display: flex; }
 
-        /* --- BUBBLES --- */
         .msg-group { margin-bottom: 10px; display: flex; flex-direction: column; }
         .sender-label { font-size: 10px; color: var(--ios-gray); margin-bottom: 2px; }
         .admin-tag { color: var(--ios-blue); font-weight: bold; margin-right: 4px; }
+        .supporter-tag { color: var(--supporter-pink); font-weight: bold; margin-right: 4px; }
         
         .msg-group.sent .sender-label { align-self: flex-end; margin-right: 8px; }
         .msg-group.received .sender-label { margin-left: 8px; }
 
-        .bubble { 
-            max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.4; 
-            word-wrap: break-word;
-        }
+        .bubble { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.4; word-wrap: break-word; }
         .received .bubble { background: #E9E9EB; color: black; align-self: flex-start; border-bottom-left-radius: 4px; }
         .sent .bubble { background: var(--ios-blue); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
 
-        /* --- ANNOUNCEMENTS --- */
         .ann-card { background: var(--ios-secondary-bg); border-radius: 12px; padding: 14px; margin-bottom: 12px; position: relative; border: 0.5px solid rgba(0,0,0,0.05); }
         .ann-card h4 { margin: 0 0 5px 0; color: var(--ios-blue); font-size: 12px; text-transform: uppercase; }
         .ann-link { display: block; background: #FFF; margin-top: 10px; padding: 10px; border-radius: 10px; text-decoration: none; color: var(--ios-blue); text-align: center; font-size: 13px; border: 0.5px solid var(--ios-separator); }
         .del-badge { position: absolute; top: -8px; left: -8px; background: var(--ios-red); color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid white; }
 
-        /* --- BOTTOM NAV & COMPOSER --- */
         .composer { position: fixed; bottom: 70px; width: 100%; padding: 8px 12px; background: var(--bar-bg); display: flex; align-items: center; gap: 12px; border-top: 0.5px solid var(--ios-separator); backdrop-filter: blur(20px); }
         .input-pill { flex: 1; background: #FFF; border: 0.5px solid var(--ios-separator); border-radius: 20px; padding: 6px 15px; }
         input { width: 100%; border: none; outline: none; font-size: 14px; background: transparent; font-family: 'Minecraft'; }
@@ -74,7 +61,6 @@
         .nav-tab.active { color: var(--ios-blue); }
         .nav-tab i { font-size: 22px; margin-bottom: 2px; }
 
-        /* --- IOS ALERTS --- */
         #modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.4); z-index: 2000; display: none; align-items: center; justify-content: center; }
         .ios-alert { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); width: 270px; border-radius: 14px; overflow: hidden; animation: pop 0.2s ease-out; }
         .alert-content { padding: 20px; text-align: center; }
@@ -142,41 +128,46 @@
         const annRef = ref(db, 'announcements');
 
         const clickAudio = document.getElementById('mc-click');
-
-        // Global sound function
-        window.playClick = () => {
-            clickAudio.currentTime = 0;
-            clickAudio.play().catch(e => console.log("Audio play blocked by browser."));
-        };
+        window.playClick = () => { clickAudio.currentTime = 0; clickAudio.play().catch(()=>{}); };
 
         let myName = localStorage.getItem('mc_name') || "";
         let isStaff = localStorage.getItem('isStaff') === 'true';
+        let myRanks = JSON.parse(localStorage.getItem('my_ranks') || "[]");
         let lastSent = 0;
         let editMode = false;
         const cussWords = ["stupid", "fuck", "nigger", "ass", "bitch", "shit"];
 
-        if(!myName) window.onload = () => showUserModal();
+        // --- URL DETECTION FOR SUPPORTER TAG ---
+        if (window.location.href.includes("abc4691acg39e41s")) {
+            window.history.replaceState({}, document.title, "/");
+            window.onload = () => {
+                openModal(`<div class="alert-content"><h3>Claim The Supporter Tag</h3><p>You are able to claim the Supporter tag</p></div>
+                <div class="alert-btns"><button class="alert-btn" style="font-weight:bold" onclick="claimSupporter()">Claim</button></div>`);
+            };
+        }
+
+        window.claimSupporter = () => {
+            playClick();
+            if (!myRanks.includes("Supporter")) {
+                myRanks.push("Supporter");
+                localStorage.setItem('my_ranks', JSON.stringify(myRanks));
+            }
+            closeModal();
+        };
+
+        if(!myName && !window.location.href.includes("abc4691acg39e41s")) window.onload = () => showUserModal();
         if(isStaff) unlockStaff();
 
         function unlockStaff() {
             document.getElementById('master-edit').classList.remove('hidden');
             document.getElementById('add-ann-btn').classList.remove('hidden');
             document.getElementById('staff-gate').classList.add('hidden');
-            if(document.getElementById('chat-view').classList.contains('active')) {
-                document.getElementById('admin-clear-btn').classList.remove('hidden');
-            }
+            if(document.getElementById('chat-view').classList.contains('active')) document.getElementById('admin-clear-btn').classList.remove('hidden');
         }
 
-        window.openModal = (html) => { 
-            document.getElementById('modal-content').innerHTML = html; 
-            document.getElementById('modal-overlay').style.display = 'flex'; 
-        };
-        window.closeModal = () => {
-            playClick();
-            document.getElementById('modal-overlay').style.display = 'none';
-        };
+        window.openModal = (html) => { document.getElementById('modal-content').innerHTML = html; document.getElementById('modal-overlay').style.display = 'flex'; };
+        window.closeModal = () => { playClick(); document.getElementById('modal-overlay').style.display = 'none'; };
 
-        // --- AUTH & USERNAME ---
         window.showUserModal = () => {
             openModal(`<div class="alert-content"><h3>Username</h3><p>Enter your Minecraft name</p><input type="text" id="setup-name" class="alert-input" value="${myName}" placeholder="Name"></div>
             <div class="alert-btns"><button class="alert-btn" onclick="closeModal()">Cancel</button><button class="alert-btn" style="font-weight:bold" onclick="saveName()">Save</button></div>`);
@@ -200,7 +191,6 @@
             } else alert("Invalid");
         };
 
-        // --- CHAT LOGIC ---
         window.handleSend = () => {
             playClick();
             const now = Date.now();
@@ -209,7 +199,7 @@
             let text = input.value.trim();
             if(!text) return;
             cussWords.forEach(w => { text = text.replace(new RegExp(w, "gi"), "****"); });
-            push(chatRef, { text, sender: myName, admin: isStaff });
+            push(chatRef, { text, sender: myName, admin: isStaff, ranks: myRanks });
             input.value = ''; lastSent = now;
         };
 
@@ -219,7 +209,12 @@
             const group = document.createElement('div');
             group.className = `msg-group ${isMe ? 'sent' : 'received'}`;
             group.id = `msg-${snap.key}`;
-            group.innerHTML = `<div class="sender-label">${d.admin ? '<span class="admin-tag">[ADMIN]</span>' : ''}${d.sender}</div><div class="bubble">${d.text}</div>`;
+            
+            let rankHtml = "";
+            if(d.admin) rankHtml += `<span class="admin-tag">[ADMIN]</span>`;
+            if(d.ranks && d.ranks.includes("Supporter")) rankHtml += `<span class="supporter-tag">[SUPPORTER]</span>`;
+
+            group.innerHTML = `<div class="sender-label">${rankHtml}${d.sender}</div><div class="bubble">${d.text}</div>`;
             document.getElementById('chat-view').appendChild(group);
             document.getElementById('chat-view').scrollTop = document.getElementById('chat-view').scrollHeight;
         });
@@ -232,7 +227,6 @@
         };
         window.executeClearChat = () => { playClick(); set(chatRef, null); closeModal(); };
 
-        // --- ANNOUNCEMENTS ---
         window.showNewPostModal = () => {
             openModal(`<div class="alert-content"><h3>New Post</h3><input type="text" id="nt" class="alert-input" placeholder="Title"><textarea id="nm" class="alert-input" placeholder="Message" style="width:100%; height:60px; margin-top:10px; border:0.5px solid #ccc; border-radius:5px; font-family:'Minecraft';"></textarea>
             <div id="btn-list-ui"><div style="display:flex; gap:5px; margin-top:10px;"><input type="text" class="alert-input bn" placeholder="Btn Name"><input type="text" class="alert-input bu" placeholder="URL"></div></div>
@@ -273,7 +267,6 @@
         window.doDeleteAnn = (id) => { playClick(); remove(ref(db, `announcements/${id}`)); closeModal(); };
         onChildRemoved(annRef, (snap) => document.getElementById(`ann-${snap.key}`)?.remove());
 
-        // --- TAB SYSTEM ---
         window.switchTab = (tab) => {
             const isChat = tab === 'chat';
             document.getElementById('chat-view').classList.toggle('active', isChat);
@@ -282,7 +275,6 @@
             document.getElementById('tab-chat').classList.toggle('active', isChat);
             document.getElementById('tab-ann').classList.toggle('active', !isChat);
             document.getElementById('header-title').innerText = isChat ? 'General Chat' : 'News';
-            
             if(isStaff && isChat) document.getElementById('admin-clear-btn').classList.remove('hidden');
             else document.getElementById('admin-clear-btn').classList.add('hidden');
         };
