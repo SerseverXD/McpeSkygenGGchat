@@ -38,7 +38,8 @@
         .header-icon { color: var(--ios-blue); font-size: 18px; cursor: pointer; width: 30px; }
         .header-icon.red { color: var(--ios-red); }
 
-        .viewport { flex: 1; padding: 65px 12px 150px 12px; overflow-y: auto; display: none; flex-direction: column; }
+        /* FIXED: Viewport scrolling and padding */
+        .viewport { flex: 1; padding: 65px 12px 100px 12px; overflow-y: auto; display: none; flex-direction: column; -webkit-overflow-scrolling: touch; }
         .viewport.active { display: flex; }
 
         .msg-group { margin-bottom: 10px; display: flex; flex-direction: column; }
@@ -53,16 +54,23 @@
         .received .bubble { background: #E9E9EB; color: black; align-self: flex-start; border-bottom-left-radius: 4px; }
         .sent .bubble { background: var(--ios-blue); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
 
-        .ann-card { background: var(--ios-secondary-bg); border-radius: 12px; padding: 14px; margin-bottom: 12px; position: relative; border: 0.5px solid rgba(0,0,0,0.05); }
+        /* FIXED: Card layout and Badge positioning */
+        .ann-card { background: var(--ios-secondary-bg); border-radius: 12px; padding: 14px; margin-bottom: 20px; position: relative; border: 0.5px solid rgba(0,0,0,0.05); }
         .ann-card h4 { margin: 0 0 5px 0; color: var(--ios-blue); font-size: 12px; text-transform: uppercase; }
         .ann-link { display: block; background: #FFF; margin-top: 10px; padding: 10px; border-radius: 10px; text-decoration: none; color: var(--ios-blue); text-align: center; font-size: 13px; border: 0.5px solid var(--ios-separator); }
-        .del-badge { position: absolute; top: -8px; left: -8px; background: var(--ios-red); color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid white; }
+        
+        .del-badge { 
+            position: absolute; top: -10px; right: -10px; background: var(--ios-red); color: white; 
+            border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; 
+            justify-content: center; font-size: 18px; border: 2.5px solid white; z-index: 10;
+            cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
 
-        .composer { position: fixed; bottom: 70px; width: 100%; padding: 8px 12px; background: var(--bar-bg); display: flex; align-items: center; gap: 12px; border-top: 0.5px solid var(--ios-separator); backdrop-filter: blur(20px); }
+        .composer { position: fixed; bottom: 70px; width: 100%; padding: 8px 12px; background: var(--bar-bg); display: flex; align-items: center; gap: 12px; border-top: 0.5px solid var(--ios-separator); backdrop-filter: blur(20px); z-index: 999; }
         .input-pill { flex: 1; background: #FFF; border: 0.5px solid var(--ios-separator); border-radius: 20px; padding: 6px 15px; }
         input { width: 100%; border: none; outline: none; font-size: 14px; background: transparent; font-family: 'Minecraft'; }
         
-        nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: var(--bar-bg); border-top: 0.5px solid var(--ios-separator); display: flex; padding-bottom: 20px; }
+        nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: var(--bar-bg); border-top: 0.5px solid var(--ios-separator); display: flex; padding-bottom: 20px; z-index: 1000; }
         .nav-tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--ios-gray); font-size: 10px; }
         .nav-tab.active { color: var(--ios-blue); }
         .nav-tab i { font-size: 22px; margin-bottom: 2px; }
@@ -99,7 +107,7 @@
         <div id="staff-gate" style="text-align: center; padding: 30px; color: var(--ios-gray);" onclick="playClick(); showStaffLogin()">
             <i class="fa-solid fa-shield-halved" style="font-size: 24px;"></i><br><span style="font-size: 10px; margin-top: 8px; display: block;">STAFF PORTAL</span>
         </div>
-        <button id="add-ann-btn" class="hidden" onclick="playClick(); showNewPostModal()" style="width:100%; background:var(--ios-blue); color:white; border:none; padding:15px; border-radius:12px; font-weight:bold;">+ CREATE POST</button>
+        <button id="add-ann-btn" class="hidden" onclick="playClick(); showNewPostModal()" style="width:100%; background:var(--ios-blue); color:white; border:none; padding:15px; border-radius:12px; font-weight:bold; margin-bottom: 20px;">+ CREATE POST</button>
     </main>
 
     <div class="composer" id="msg-composer">
@@ -143,7 +151,6 @@
         let editMode = false;
         const cussWords = ["stupid", "fuck", "nigger", "ass", "bitch", "shit"];
 
-        // --- SECRET URL LOGIC ---
         if (window.location.search.includes('abc4691acg39e41s')) {
             window.history.replaceState({}, document.title, window.location.pathname);
             window.onload = () => {
@@ -158,6 +165,7 @@
             isSupporter = true;
             localStorage.setItem('isSupporter', 'true');
             closeModal();
+            location.reload(); 
         };
 
         if(!myName) window.onload = () => showUserModal();
@@ -167,7 +175,6 @@
             document.getElementById('master-edit').classList.remove('hidden');
             document.getElementById('add-ann-btn').classList.remove('hidden');
             document.getElementById('staff-gate').classList.add('hidden');
-            if(document.getElementById('chat-view').classList.contains('active')) document.getElementById('admin-clear-btn').classList.remove('hidden');
         }
 
         window.openModal = (html) => { document.getElementById('modal-content').innerHTML = html; document.getElementById('modal-overlay').style.display = 'flex'; };
@@ -214,11 +221,9 @@
             const group = document.createElement('div');
             group.className = `msg-group ${isMe ? 'sent' : 'received'}`;
             group.id = `msg-${snap.key}`;
-            
             let tags = "";
             if(d.admin) tags += `<span class="admin-tag">[ADMIN]</span>`;
             if(d.supporter) tags += `<span class="supporter-tag">[SUPPORTER]</span>`;
-
             group.innerHTML = `<div class="sender-label">${tags}${d.sender}</div><div class="bubble">${d.text}</div>`;
             document.getElementById('chat-view').appendChild(group);
             document.getElementById('chat-view').scrollTop = document.getElementById('chat-view').scrollHeight;
@@ -256,12 +261,24 @@
             const a = snap.val(), id = snap.key, card = document.createElement('div');
             card.className = 'ann-card'; card.id = `ann-${id}`;
             let bHtml = (a.btns || []).map(b => `<a href="${b.url}" target="_blank" class="ann-link" onclick="playClick()">${b.name}</a>`).join('');
-            card.innerHTML = `<div class="del-badge ${editMode ? '' : 'hidden'}" onclick="playClick(); reqDeleteAnn('${id}')">×</div><h4>${a.title}</h4><p>${a.msg}</p>${bHtml}`;
+            // Use right side badge for better visibility
+            card.innerHTML = `<div class="del-badge ${editMode ? '' : 'hidden'}" onclick="window.reqDeleteAnn('${id}')">×</div><h4>${a.title}</h4><p>${a.msg}</p>${bHtml}`;
             document.getElementById('ann-container').prepend(card);
         });
 
-        window.toggleEdit = () => { editMode = !editMode; document.getElementById('master-edit').style.color = editMode ? 'var(--ios-red)' : 'var(--ios-blue)'; document.querySelectorAll('.del-badge').forEach(b => b.classList.toggle('hidden', !editMode)); };
-        window.reqDeleteAnn = (id) => { openModal(`<div class="alert-content"><h3>Delete?</h3></div><div class="alert-btns"><button class="alert-btn" onclick="closeModal()">No</button><button class="alert-btn" style="color:var(--ios-red); font-weight:bold" onclick="doDeleteAnn('${id}')">Delete</button></div>`); };
+        // FIXED: toggleEdit now correctly targets all current and future badges
+        window.toggleEdit = () => { 
+            editMode = !editMode; 
+            document.getElementById('master-edit').style.color = editMode ? 'var(--ios-red)' : 'var(--ios-blue)'; 
+            const badges = document.querySelectorAll('.del-badge');
+            badges.forEach(b => b.classList.toggle('hidden', !editMode));
+        };
+
+        window.reqDeleteAnn = (id) => { 
+            playClick();
+            openModal(`<div class="alert-content"><h3>Delete Post?</h3><p>This action cannot be undone.</p></div><div class="alert-btns"><button class="alert-btn" onclick="closeModal()">No</button><button class="alert-btn" style="color:var(--ios-red); font-weight:bold" onclick="doDeleteAnn('${id}')">Delete</button></div>`); 
+        };
+        
         window.doDeleteAnn = (id) => { playClick(); remove(ref(db, `announcements/${id}`)); closeModal(); };
         onChildRemoved(annRef, (snap) => document.getElementById(`ann-${snap.key}`)?.remove());
 
@@ -273,10 +290,16 @@
             document.getElementById('tab-chat').classList.toggle('active', isChat);
             document.getElementById('tab-ann').classList.toggle('active', !isChat);
             document.getElementById('header-title').innerText = isChat ? 'General Chat' : 'News';
-            if(isStaff && isChat) document.getElementById('admin-clear-btn').classList.remove('hidden'); else document.getElementById('admin-clear-btn').classList.add('hidden');
+            
+            // Staff specific UI
+            if(isStaff) {
+                document.getElementById('admin-clear-btn').classList.toggle('hidden', !isChat);
+                document.getElementById('master-edit').classList.toggle('hidden', isChat);
+            }
         };
 
         document.getElementById('chat-input').addEventListener('keypress', (e) => { if(e.key==='Enter') handleSend(); });
     </script>
 </body>
 </html>
+
