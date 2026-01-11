@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sleek iOS Chat</title>
+    <title>Sleek iOS Shop & News</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <script data-cfasync="false" src="//dcbbwymp1bhlf.cloudfront.net/?wbbcd=1236373"></script>
-
+    
+    <script src="https://pl28454785.effectivegatecpm.com/cf/6b/aa/cf6baa1ccf473b64ab2ac524cac001ba.js"></script>
+    
     <style>
         @font-face {
             font-family: 'Minecraft';
@@ -36,44 +38,24 @@
         }
         header h1 { margin: 0; font-size: 14px; font-weight: 400; color: #000; letter-spacing: 1px; }
         .header-icon { color: var(--ios-blue); font-size: 18px; cursor: pointer; width: 30px; }
-        .header-icon.red { color: var(--ios-red); }
 
-        /* FIXED: News Clipping Bug */
         .viewport { 
             flex: 1; 
-            padding: 65px 12px 160px 12px; 
+            padding: 65px 12px 140px 12px; 
             overflow-y: auto; 
             display: none; 
             flex-direction: column; 
-            height: 100%;
+            height: calc(100vh - 70px);
         }
         .viewport.active { display: flex; }
-
-        .msg-group { margin-bottom: 10px; display: flex; flex-direction: column; }
-        .sender-label { font-size: 10px; color: var(--ios-gray); margin-bottom: 2px; display: flex; gap: 4px; }
-        .admin-tag { color: var(--ios-blue); font-weight: bold; }
-        .supporter-tag { color: var(--mc-gold); font-weight: bold; }
-        
-        .msg-group.sent .sender-label { align-self: flex-end; margin-right: 8px; justify-content: flex-end; }
-        .msg-group.received .sender-label { margin-left: 8px; }
-
-        .bubble { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.4; word-wrap: break-word; }
-        .received .bubble { background: #E9E9EB; color: black; align-self: flex-start; border-bottom-left-radius: 4px; }
-        .sent .bubble { background: var(--ios-blue); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
 
         .ann-card { background: var(--ios-secondary-bg); border-radius: 12px; padding: 14px; margin-bottom: 12px; position: relative; border: 0.5px solid rgba(0,0,0,0.05); }
         .ann-card h4 { margin: 0 0 5px 0; color: var(--ios-blue); font-size: 12px; text-transform: uppercase; }
         .ann-link { display: block; background: #FFF; margin-top: 10px; padding: 10px; border-radius: 10px; text-decoration: none; color: var(--ios-blue); text-align: center; font-size: 13px; border: 0.5px solid var(--ios-separator); }
-        
-        /* FIXED: Delete badge positioning */
-        .del-badge { position: absolute; top: 5px; right: 10px; color: var(--ios-red); cursor: pointer; font-size: 20px; z-index: 10; }
+        .del-badge { position: absolute; top: -8px; left: -8px; background: var(--ios-red); color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid white; cursor: pointer; z-index: 10; }
 
-        .composer { position: fixed; bottom: 70px; width: 100%; padding: 8px 12px; background: var(--bar-bg); display: flex; align-items: center; gap: 12px; border-top: 0.5px solid var(--ios-separator); backdrop-filter: blur(20px); z-index: 999; }
-        .input-pill { flex: 1; background: #FFF; border: 0.5px solid var(--ios-separator); border-radius: 20px; padding: 6px 15px; }
-        input { width: 100%; border: none; outline: none; font-size: 14px; background: transparent; font-family: 'Minecraft'; }
-        
         nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: var(--bar-bg); border-top: 0.5px solid var(--ios-separator); display: flex; padding-bottom: 20px; z-index: 1000; }
-        .nav-tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--ios-gray); font-size: 10px; }
+        .nav-tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--ios-gray); font-size: 10px; cursor: pointer; }
         .nav-tab.active { color: var(--ios-blue); }
         .nav-tab i { font-size: 22px; margin-bottom: 2px; }
 
@@ -84,7 +66,41 @@
         .alert-btns { display: flex; border-top: 0.5px solid var(--ios-separator); }
         .alert-btn { flex: 1; padding: 12px; border: none; background: transparent; color: var(--ios-blue); font-size: 16px; cursor: pointer; border-right: 0.5px solid var(--ios-separator); font-family: 'Minecraft'; }
         .alert-btn:last-child { border-right: none; }
-        
+
+        /* Adsterra Fixed Banner */
+        .ad-container {
+            position: fixed;
+            bottom: 75px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 320px;
+            height: 50px;
+            background: #eee;
+            z-index: 999;
+        }
+
+        .ad-controls {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            display: flex;
+            gap: 1px; 
+            z-index: 1001;
+        }
+        .ad-control-btn {
+            background: white;
+            border: none;
+            width: 18px; /* Restored button size */
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+        }
+        .ad-control-btn i { color: #0AADCC; font-size: 1rem; } /* Three dots: 1rem */
+        .ad-choice-icon { width: 0.9rem; height: 0.9rem; object-fit: contain; } /* AdChoices: 0.9rem */
+
         .hidden { display: none !important; }
         @keyframes pop { from { transform: scale(1.1); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
@@ -95,32 +111,36 @@
 
     <header>
         <i class="fa-solid fa-circle-user header-icon" onclick="playClick(); showUserModal()"></i>
-        <h1 id="header-title">General Chat</h1>
-        <div style="display: flex; gap: 15px;">
-            <i class="fa-solid fa-trash header-icon red hidden" id="admin-clear-btn" onclick="playClick(); confirmClearChat()"></i>
-            <i class="fa-solid fa-pen-to-square header-icon hidden" id="master-edit" onclick="playClick(); toggleEdit()"></i>
-        </div>
+        <h1 id="header-title">Shop</h1>
+        <i class="fa-solid fa-pen-to-square header-icon hidden" id="master-edit" onclick="playClick(); toggleEdit()"></i>
     </header>
 
-    <main id="chat-view" class="viewport active"></main>
+    <main id="shop-view" class="viewport active">
+        <div id="shop-container"></div>
+        <button id="add-shop-btn" class="hidden" onclick="playClick(); showNewPostModal('shop')" style="width:100%; background:var(--ios-blue); color:white; border:none; padding:15px; border-radius:12px; font-weight:bold; margin-top:10px;">+ ADD ARTICLE</button>
+    </main>
 
     <main id="ann-view" class="viewport">
         <div id="ann-container"></div>
         <div id="staff-gate" style="text-align: center; padding: 30px; color: var(--ios-gray);" onclick="playClick(); showStaffLogin()">
             <i class="fa-solid fa-shield-halved" style="font-size: 24px;"></i><br><span style="font-size: 10px; margin-top: 8px; display: block;">STAFF PORTAL</span>
         </div>
-        <button id="add-ann-btn" class="hidden" onclick="playClick(); showNewPostModal()" style="width:100%; background:var(--ios-blue); color:white; border:none; padding:15px; border-radius:12px; font-weight:bold; margin-bottom: 20px;">+ CREATE POST</button>
-        <div style="font-size: 8px; color: #ccc; text-align: center; margin-top: 10px;">8f0854379771120ac351f130997989f845637412</div>
+        <button id="add-ann-btn" class="hidden" onclick="playClick(); showNewPostModal('ann')" style="width:100%; background:var(--ios-blue); color:white; border:none; padding:15px; border-radius:12px; font-weight:bold; margin-top:10px;">+ CREATE NEWS</button>
     </main>
 
-    <div class="composer" id="msg-composer">
-        <i class="fa-solid fa-camera" style="color: var(--ios-gray); font-size: 22px;"></i>
-        <div class="input-pill"><input type="text" id="chat-input" placeholder="iMessage"></div>
-        <button onclick="handleSend()" style="background:var(--ios-blue); color:white; border:none; width:30px; height:30px; border-radius:50%;"><i class="fa-solid fa-arrow-up"></i></button>
+    <div class="ad-container">
+        <div class="ad-controls">
+            <button class="ad-control-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d3/AdChoices_Icon.png" class="ad-choice-icon"></button>
+            <button class="ad-control-btn"><i class="fa-solid fa-ellipsis-v"></i></button>
+        </div>
+        <script type="text/javascript">
+            atOptions = { 'key' : '0d34b9906a176c3865604125d630f282', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+        </script>
+        <script type="text/javascript" src="https://www.highperformanceformat.com/0d34b9906a176c3865604125d630f282/invoke.js"></script>
     </div>
 
     <nav>
-        <div class="nav-tab active" id="tab-chat" onclick="playClick(); switchTab('chat')"><i class="fa-solid fa-comment"></i><span>Messages</span></div>
+        <div class="nav-tab active" id="tab-shop" onclick="playClick(); switchTab('shop')"><i class="fa-solid fa-cart-shopping"></i><span>Shop</span></div>
         <div class="nav-tab" id="tab-ann" onclick="playClick(); switchTab('ann')"><i class="fa-solid fa-bullhorn"></i><span>News</span></div>
     </nav>
 
@@ -128,7 +148,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { getDatabase, ref, push, onChildAdded, remove, onChildRemoved, set } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+        import { getDatabase, ref, push, onChildAdded, remove, onChildRemoved } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBsx5ZJLvQqjhG9EjVA42qxf10tvIIXxc0",
@@ -141,39 +161,24 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const chatRef = ref(db, 'messages');
         const annRef = ref(db, 'announcements');
+        const shopRef = ref(db, 'shop');
         const clickAudio = document.getElementById('mc-click');
 
         window.playClick = () => { clickAudio.currentTime = 0; clickAudio.play().catch(()=>{}); };
 
         let myName = localStorage.getItem('mc_name') || "";
         let isStaff = localStorage.getItem('isStaff') === 'true';
-        // PERMANENT SUPPORTER TAG
-        let isSupporter = true; 
-        let lastSent = 0;
         let editMode = false;
-        const cussWords = ["stupid", "fuck", "nigger", "ass", "bitch", "shit"];
 
-        // FIXED URL BUG: Checks parameters without recursive loops
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('abc4691acg39e41s')) {
-            window.history.replaceState({}, document.title, window.location.pathname);
-            window.addEventListener('load', () => {
-                playClick();
-                openModal(`<div class="alert-content"><h3>Supporter Active</h3><p>Your permanent supporter tag is now active.</p></div>
-                <div class="alert-btns"><button class="alert-btn" style="font-weight:bold" onclick="closeModal()">Awesome</button></div>`);
-            });
-        }
-
-        if(!myName) window.addEventListener('load', () => showUserModal());
+        if(!myName) window.onload = () => showUserModal();
         if(isStaff) unlockStaff();
 
         function unlockStaff() {
             document.getElementById('master-edit').classList.remove('hidden');
             document.getElementById('add-ann-btn').classList.remove('hidden');
+            document.getElementById('add-shop-btn').classList.remove('hidden');
             document.getElementById('staff-gate').classList.add('hidden');
-            if(document.getElementById('chat-view').classList.contains('active')) document.getElementById('admin-clear-btn').classList.remove('hidden');
         }
 
         window.openModal = (html) => { document.getElementById('modal-content').innerHTML = html; document.getElementById('modal-overlay').style.display = 'flex'; };
@@ -194,112 +199,70 @@
             <div class="alert-btns"><button class="alert-btn" onclick="closeModal()">Back</button><button class="alert-btn" style="font-weight:bold" onclick="doStaffLogin()">Login</button></div>`);
         };
         window.doStaffLogin = () => {
-            playClick();
             if(document.getElementById('lu').value === "Hunter30927" && document.getElementById('lp').value === "Beluga35") {
-                isStaff = true; myName = "Hunter30927";
-                localStorage.setItem('isStaff', 'true'); localStorage.setItem('mc_name', 'Hunter30927');
+                isStaff = true; localStorage.setItem('isStaff', 'true');
                 unlockStaff(); closeModal();
             } else alert("Invalid");
         };
 
-        window.handleSend = () => {
-            playClick();
-            const now = Date.now();
-            if(now - lastSent < 2000) { alert("Wait 2 seconds!"); return; }
-            const input = document.getElementById('chat-input');
-            let text = input.value.trim();
-            if(!text) return;
-            cussWords.forEach(w => { text = text.replace(new RegExp(w, "gi"), "****"); });
-            push(chatRef, { text, sender: myName, admin: isStaff, supporter: isSupporter });
-            input.value = ''; lastSent = now;
-        };
+        function createCard(snap, containerId, type) {
+            const a = snap.val(), id = snap.key, card = document.createElement('div');
+            card.className = 'ann-card'; card.id = `${type}-${id}`;
+            let bHtml = (a.btns || []).map(b => `<a href="${b.url}" target="_blank" class="ann-link" onclick="playClick()">${b.name}</a>`).join('');
+            card.innerHTML = `<div class="del-badge ${editMode ? '' : 'hidden'}" onclick="playClick(); reqDelete('${id}', '${type}')">×</div><h4>${a.title}</h4><p>${a.msg}</p>${bHtml}`;
+            document.getElementById(containerId).prepend(card);
+        }
 
-        onChildAdded(chatRef, (snap) => {
-            const d = snap.val();
-            const isMe = d.sender === myName;
-            const group = document.createElement('div');
-            group.className = `msg-group ${isMe ? 'sent' : 'received'}`;
-            group.id = `msg-${snap.key}`;
-            
-            let tags = "";
-            if(d.admin) tags += `<span class="admin-tag">[ADMIN]</span>`;
-            if(d.supporter) tags += `<span class="supporter-tag">[SUPPORTER]</span>`;
+        onChildAdded(annRef, (snap) => createCard(snap, 'ann-container', 'ann'));
+        onChildAdded(shopRef, (snap) => createCard(snap, 'shop-container', 'shop'));
+        onChildRemoved(annRef, (snap) => document.getElementById(`ann-${snap.key}`)?.remove());
+        onChildRemoved(shopRef, (snap) => document.getElementById(`shop-${snap.key}`)?.remove());
 
-            group.innerHTML = `<div class="sender-label">${tags}${d.sender}</div><div class="bubble">${d.text}</div>`;
-            document.getElementById('chat-view').appendChild(group);
-            document.getElementById('chat-view').scrollTop = document.getElementById('chat-view').scrollHeight;
-        });
-
-        onChildRemoved(chatRef, (snap) => document.getElementById(`msg-${snap.key}`)?.remove());
-
-        window.confirmClearChat = () => {
-            openModal(`<div class="alert-content"><h3>Clear All?</h3><p>This will wipe the entire chat history.</p></div>
-            <div class="alert-btns"><button class="alert-btn" onclick="closeModal()">Cancel</button><button class="alert-btn" style="color:var(--ios-red); font-weight:bold" onclick="executeClearChat()">Wipe Chat</button></div>`);
-        };
-        window.executeClearChat = () => { playClick(); set(chatRef, null); closeModal(); };
-
-        window.showNewPostModal = () => {
-            openModal(`<div class="alert-content" style="max-height: 70vh; overflow-y: auto;"><h3>New Post</h3><input type="text" id="nt" class="alert-input" placeholder="Title"><textarea id="nm" class="alert-input" placeholder="Message" style="width:100%; height:60px; margin-top:10px; border:0.5px solid #ccc; border-radius:5px; font-family:'Minecraft';"></textarea>
+        window.showNewPostModal = (type) => {
+            openModal(`<div class="alert-content"><h3>New ${type === 'shop' ? 'Article' : 'Post'}</h3><input type="text" id="nt" class="alert-input" placeholder="Title"><textarea id="nm" class="alert-input" placeholder="Description" style="width:100%; height:60px; margin-top:10px; border:0.5px solid #ccc; border-radius:5px; font-family:'Minecraft';"></textarea>
             <div id="btn-list-ui"><div style="display:flex; gap:5px; margin-top:10px;"><input type="text" class="alert-input bn" placeholder="Btn Name"><input type="text" class="alert-input bu" placeholder="URL"></div></div>
             <button onclick="playClick(); addBtnRow()" style="background:none; border:none; color:var(--ios-blue); font-size:10px; margin-top:10px;">+ ADD BUTTON</button></div>
-            <div class="alert-btns"><button class="alert-btn" onclick="closeModal()">Cancel</button><button class="alert-btn" style="font-weight:bold" onclick="submitPost()">Post</button></div>`);
+            <div class="alert-btns"><button class="alert-btn" onclick="closeModal()">Cancel</button><button class="alert-btn" style="font-weight:bold" onclick="submitPost('${type}')">Post</button></div>`);
         };
+
         window.addBtnRow = () => {
             const d = document.createElement('div'); d.style="display:flex; gap:5px; margin-top:5px";
             d.innerHTML = `<input type="text" class="alert-input bn" placeholder="Name"><input type="text" class="alert-input bu" placeholder="URL">`;
             document.getElementById('btn-list-ui').appendChild(d);
         };
-        window.submitPost = () => {
-            playClick();
+
+        window.submitPost = (type) => {
             const btns = [];
             const ns = document.querySelectorAll('.bn'), us = document.querySelectorAll('.bu');
             ns.forEach((n, i) => { if(n.value && us[i].value) btns.push({name: n.value, url: us[i].value}); });
-            push(annRef, { title: document.getElementById('nt').value, msg: document.getElementById('nm').value, btns });
+            const targetRef = type === 'shop' ? shopRef : annRef;
+            push(targetRef, { title: document.getElementById('nt').value, msg: document.getElementById('nm').value, btns });
             closeModal();
         };
 
-        onChildAdded(annRef, (snap) => {
-            const a = snap.val(), id = snap.key, card = document.createElement('div');
-            card.className = 'ann-card'; card.id = `ann-${id}`;
-            let bHtml = (a.btns || []).map(b => `<a href="${b.url}" target="_blank" class="ann-link" onclick="playClick()">${b.name}</a>`).join('');
-            card.innerHTML = `<div class="del-badge ${editMode ? '' : 'hidden'}" onclick="playClick(); reqDeleteAnn('${id}')">×</div><h4>${a.title}</h4><p>${a.msg}</p>${bHtml}`;
-            document.getElementById('ann-container').prepend(card);
-        });
-
-        window.toggleEdit = () => { 
-            editMode = !editMode; 
-            document.getElementById('master-edit').style.color = editMode ? 'var(--ios-red)' : 'var(--ios-blue)'; 
-            document.querySelectorAll('.del-badge').forEach(b => b.classList.toggle('hidden', !editMode)); 
-        };
-        
-        window.reqDeleteAnn = (id) => { 
-            openModal(`<div class="alert-content"><h3>Delete?</h3></div><div class="alert-btns"><button class="alert-btn" onclick="closeModal()">No</button><button class="alert-btn" style="color:var(--ios-red); font-weight:bold" onclick="doDeleteAnn('${id}')">Delete</button></div>`); 
-        };
-        
-        window.doDeleteAnn = (id) => { 
-            playClick(); 
-            remove(ref(db, `announcements/${id}`)); 
-            closeModal(); 
+        window.toggleEdit = () => {
+            editMode = !editMode;
+            document.getElementById('master-edit').style.color = editMode ? 'var(--ios-red)' : 'var(--ios-blue)';
+            document.querySelectorAll('.del-badge').forEach(b => b.classList.toggle('hidden', !editMode));
         };
 
-        // FIXED: Listener for real-time deletion
-        onChildRemoved(annRef, (snap) => {
-            const el = document.getElementById(`ann-${snap.key}`);
-            if(el) el.remove();
-        });
+        window.reqDelete = (id, type) => {
+            openModal(`<div class="alert-content"><h3>Delete?</h3></div><div class="alert-btns"><button class="alert-btn" onclick="closeModal()">No</button><button class="alert-btn" style="color:var(--ios-red); font-weight:bold" onclick="doDelete('${id}', '${type}')">Delete</button></div>`);
+        };
+
+        window.doDelete = (id, type) => {
+            const targetPath = type === 'shop' ? `shop/${id}` : `announcements/${id}`;
+            remove(ref(db, targetPath)); closeModal();
+        };
 
         window.switchTab = (tab) => {
-            const isChat = tab === 'chat';
-            document.getElementById('chat-view').classList.toggle('active', isChat);
-            document.getElementById('ann-view').classList.toggle('active', !isChat);
-            document.getElementById('msg-composer').classList.toggle('hidden', !isChat);
-            document.getElementById('tab-chat').classList.toggle('active', isChat);
-            document.getElementById('tab-ann').classList.toggle('active', !isChat);
-            document.getElementById('header-title').innerText = isChat ? 'General Chat' : 'News';
-            if(isStaff && isChat) document.getElementById('admin-clear-btn').classList.remove('hidden'); else document.getElementById('admin-clear-btn').classList.add('hidden');
+            const isShop = tab === 'shop';
+            document.getElementById('shop-view').classList.toggle('active', isShop);
+            document.getElementById('ann-view').classList.toggle('active', !isShop);
+            document.getElementById('tab-shop').classList.toggle('active', isShop);
+            document.getElementById('tab-ann').classList.toggle('active', !isShop);
+            document.getElementById('header-title').innerText = isShop ? 'Shop' : 'News';
         };
-
-        document.getElementById('chat-input').addEventListener('keypress', (e) => { if(e.key==='Enter') handleSend(); });
     </script>
 </body>
 </html>
